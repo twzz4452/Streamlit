@@ -1,137 +1,136 @@
-import streamlit as st
-import pandas as pd
+GlowScript 3.2 VPython
 
-# 1. 페이지 설정
-st.set_page_config(
-    page_title="AI 맞춤형 여행지 추천",
-    page_icon="✈️",
-    layout="wide"
+# ==========================================
+# 1. 3D 카메라 및 클로즈업 뷰 설정
+# ==========================================
+scene = canvas(
+    title="<b>⚽ SON 7 프리미엄 프리킥 & 오른쪽 상단 골인 시뮬레이션</b>",
+    width=1050, height=650,
+    center=vec(18, 2.2, 0),
+    background=vec(0.02, 0.05, 0.12)
 )
 
-# 2. 샘플 여행지 데이터베이스
-# 실제 서비스라면 CSV나 데이터베이스에서 불러올 수 있습니다.
-travel_data = [
-    {
-        "name": "강원도 강릉",
-        "category": "국내",
-        "style": "힐링/자연",
-        "budget": "보통",
-        "desc": "푸른 동해바다와 안목해변의 커피 거리, 그리고 소나무숲이 어우러진 힐링 도시입니다.",
-        "highlights": ["안목해변 커피거리", "정동진 바다부채길", "초당순두부마을"],
-        "emoji": "🌊"
-    },
-    {
-        "name": "제주도 서귀포",
-        "category": "국내",
-        "style": "액티비티/탐험",
-        "budget": "여유",
-        "desc": "환상적인 해안 절벽과 올레길, 스노클링을 즐길 수 있는 대한민국 최고의 휴양지입니다.",
-        "highlights": ["성산일출봉", "중문 색달해변", "한라산 등반"],
-        "emoji": "🍊"
-    },
-    {
-        "name": "일본 오사카",
-        "category": "해외",
-        "style": "미식/쇼핑",
-        "budget": "보통",
-        "desc": "타코야키, 오코노미야키 등 길거리 음식의 천국이자 쇼핑의 성지입니다.",
-        "highlights": ["도톤보리 글리코상", "오사카 성", "유니버설 스튜디오 재팬"],
-        "emoji": "🐙"
-    },
-    {
-        "name": "태국 방콕",
-        "category": "해외",
-        "style": "문화/역사",
-        "budget": "알뜰",
-        "desc": "화려한 왕궁과 이국적인 야시장, 가성비 최고의 미식과 마사지를 즐길 수 있는 곳입니다.",
-        "highlights": ["왓 아룬 사원", "짜뚜짝 주말시장", "카오산 로드"],
-        "emoji": "🛕"
-    },
-    {
-        "name": "스위스 인터라켄",
-        "category": "해외",
-        "style": "액티비티/탐험",
-        "budget": "럭셔리",
-        "desc": "알프스의 대자연 속에서 스카이다이빙과 하이킹을 즐길 수 있는 액티비티의 성지입니다.",
-        "highlights": ["융프라우요흐", "하더 쿨룸 전망대", "패러글라이딩"],
-        "emoji": "🏔️"
-    },
-    {
-        "name": "부산 광안리",
-        "category": "국내",
-        "style": "미식/쇼핑",
-        "budget": "보통",
-        "desc": "화려한 광안대교 야경과 바다를 보며 즐기는 맛있는 회와 해산물의 도시입니다.",
-        "highlights": ["광안리 드론쇼", "민락수변공원", "해운대 블루라인파크"],
-        "emoji": "🌉"
-    }
-]
+# 카메라를 선수와 공 바로 측후면에 가깝게 배치
+scene.camera.pos = vec(-5, 2.0, 4)
+scene.camera.axis = vec(25, -0.2, -4)
 
-df = pd.DataFrame(travel_data)
+# 축구장 바닥 (잔디)
+ground = box(pos=vec(25, -0.11, 0), size=vec(100, 0.2, 50), color=vec(0.08, 0.4, 0.15))
 
-# 3. 메인 타이틀
-st.title("✈️ AI 맞춤형 여행지 추천 시스템")
-st.markdown("원하는 여행 스타일과 조건을 선택하시면 최적의 여행지를 골라드립니다!")
-st.divider()
+# ==========================================
+# 2. 골대 및 구조물 제작 (X = 35m 지점)
+# ==========================================
+goal_x = 35.0
+goal_w = 7.32
+goal_h = 2.44
+goal_d = 2.0
 
-# 4. 사이드바 - 사용자 필터 입력
-st.sidebar.header("🔍 여행 취향 설정")
+# 골대 프레임
+post_left = cylinder(pos=vec(goal_x, 0, -goal_w/2), axis=vec(0, goal_h, 0), radius=0.08, color=color.white)
+post_right = cylinder(pos=vec(goal_x, 0, goal_w/2), axis=vec(0, goal_h, 0), radius=0.08, color=color.white)
+crossbar = cylinder(pos=vec(goal_x, goal_h, -goal_w/2), axis=vec(0, 0, goal_w), radius=0.08, color=color.white)
 
-selected_category = st.sidebar.radio(
-    "1. 여행 지역 선택",
-    ["전체", "국내", "해외"]
+# 골망 영역 시각화
+net_box = box(pos=vec(goal_x + goal_d/2, goal_h/2, 0), size=vec(goal_d, goal_h, goal_w), color=vec(0.9, 0.9, 0.9), opacity=0.15)
+
+# ==========================================
+# 3. 손흥민 스타일 선수 모델 (7번 유니폼 & 축구화)
+# ==========================================
+p_head = sphere(pos=vec(-1.5, 1.7, -0.4), radius=0.18, color=vec(0.9, 0.7, 0.6))
+p_hair = ellipsoid(pos=vec(-1.5, 1.82, -0.4), size=vec(0.32, 0.15, 0.32), color=color.black)
+
+p_torso = cylinder(pos=vec(-1.5, 0.9, -0.4), axis=vec(0, 0.7, 0), radius=0.22, color=color.red)
+p_stripe = box(pos=vec(-1.5, 0.9, -0.4), size=vec(0.05, 0.68, 0.46), color=color.white)
+
+# 유니폼 등번호 '7'번 마킹
+num_7 = text(text="7", pos=vec(-1.76, 1.0, -0.55), axis=vec(0, 0, -1), height=0.22, depth=0.02, color=color.white)
+
+p_short = cylinder(pos=vec(-1.5, 0.2, -0.4), axis=vec(0, 0.6, 0), radius=0.13, color=color.blue)
+p_boot_l = box(pos=vec(-1.5, -0.1, -0.4), size=vec(0.15, 0.08, 0.28), color=color.black)
+
+p_leg_r = cylinder(pos=vec(-1.4, 0.8, -0.2), axis=vec(0.1, -0.8, 0.2), radius=0.09, color=color.white)
+p_boot_r = box(pos=vec(-1.3, -0.05, 0.0), size=vec(0.15, 0.08, 0.28), color=color.black)
+
+# ==========================================
+# 4. 축구공 물리 매개변수 및 생성
+# ==========================================
+R = 0.11
+m = 0.43
+g = vec(0, -9.81, 0)
+rho = 1.225
+Cd = 0.24
+Cm = 0.26
+A = pi * R**2
+
+ball = sphere(
+    pos=vec(0, R, 0),
+    radius=R,
+    color=color.white,
+    make_trail=True,
+    trail_color=vec(1, 0.8, 0),
+    trail_radius=0.035
 )
 
-selected_style = st.sidebar.selectbox(
-    "2. 선호하는 여행 스타일",
-    ["전체", "힐링/자연", "액티비티/탐험", "미식/쇼핑", "문화/역사"]
-)
+# ==========================================
+# 5. [수정됨] 오른쪽 상단 골인을 위한 향상된 슈팅 초기 조건
+# ==========================================
+v0 = 29.0               # 초기 속도를 높여서 공이 힘 있게 날아가도록 수정
+angle_elevation = 18.5  # 발사 각도를 높여 공이 위로 솟구치며 골대 상단을 향하도록 수정
+angle_azimuth = 3.0     # 오른쪽 방향각
 
-selected_budget = st.sidebar.select_slider(
-    "3. 예산 수준",
-    options=["알뜰", "보통", "여유", "럭셔리"],
-    value="보통"
-)
+rad_elev = radians(angle_elevation)
+rad_azim = radians(angle_azimuth)
 
-# 5. 필터링 로직 구현
-filtered_df = df.copy()
+vx = v0 * cos(rad_elev) * cos(rad_azim)
+vy = v0 * sin(rad_elev)
+vz = v0 * cos(rad_elev) * sin(rad_azim)
+ball.v = vec(vx, vy, vz)
 
-if selected_category != "전체":
-    filtered_df = filtered_df[filtered_df["category"] == selected_category]
+omega = vec(0, -25, 0)
 
-if selected_style != "전체":
-    filtered_df = filtered_df[filtered_df["style"] == selected_style]
+print("🔥 SON 7 프리킥! 우측 상단 골인 슈팅 시작!")
 
-# 예산 필터 (선택한 예산과 같거나 그 이하인 항목 우선, 또는 일치 항목)
-# 여기서는 예산 수준 매칭을 위해 간단히 필터링
-budget_order = {"알뜰": 1, "보통": 2, "여유": 3, "럭셔리": 4}
-filtered_df = filtered_df[
-    filtered_df["budget"].map(budget_order) <= budget_order[selected_budget]
-]
+# ==========================================
+# 6. 킥 모션 애니메이션
+# ==========================================
+for _ in range(12):
+    rate(35)
+    p_leg_r.axis = vec(0.3, -0.6, -0.3)
 
-# 6. 결과 출력 영역
-st.subheader(f"🎯 추천 결과 ({len(filtered_df)}건)")
+# ==========================================
+# 7. 물리 시뮬레이션 루프
+# ==========================================
+dt = 0.002
+t = 0.0
+goal_scored = False
 
-if filtered_df.empty:
-    st.warning("조건에 맞는 여행지가 없습니다. 필터를 조금 더 넓게 설정해 보세요!")
-else:
-    # 2열 그리드로 카드 배치
-    cols = st.columns(2)
-    for idx, row in filtered_df.reset_index().iterrows():
-        col = cols[idx % 2]
-        with col:
-            with st.container(border=True):
-                st.markdown(f"### {row['emoji']} {row['name']}")
-                st.caption(f"카테고리: {row['category']} | 스타일: {row['style']} | 예산: {row['budget']}")
-                st.write(row["desc"])
-                
-                st.markdown("**🌟 핵심 추천 코스**")
-                for highlight in row["highlights"]:
-                    st.markdown(f"- {highlight}")
-                    
-                if st.button(f"상세 일정 보기 ({row['name']})", key=f"btn_{idx}"):
-                    st.success(f"🎉 [{row['name']}] 선택완료! 곧 상세 일정 플래너 기능이 업데이트됩니다.")
-
-# 7. 푸터
-st.divider()
-st.markdown("<p style='text-align: center; color: gray;'>© 2026 Travel Recommender App. Built with Streamlit.</p>", unsafe_allow_html=True)
+while t < 3.5:
+    rate(1/dt)
+    
+    if not goal_scored:
+        v_mag = mag(ball.v)
+        v_hat = hat(ball.v)
+        
+        F_net = (m * g) + (-0.5 * rho * Cd * A * (v_mag**2) * v_hat) + (0.5 * rho * Cm * A * R * cross(omega, ball.v))
+        
+        a = F_net / m
+        ball.v = ball.v + a * dt
+        ball.pos = ball.pos + ball.v * dt
+        
+        # 골대 오른쪽 상단 통과 판정 (범위를 골대 상단 높이에 맞게 조정)
+        if ball.pos.x >= goal_x and (1.8 <= ball.pos.y <= 2.4) and (1.0 <= ball.pos.z <= 3.4):
+            goal_scored = True
+            print("🎉 GOAL IN!! 오른쪽 상단 구석 명중!")
+            ball.color = vec(1, 0.5, 0)
+            
+        if ball.pos.y <= R:
+            ball.pos.y = R
+            break
+    else:
+        ball.v = ball.v * 0.82
+        ball.pos = ball.pos + ball.v * dt
+        if ball.pos.x >= goal_x + 1.5:
+            ball.pos.x = goal_x + 1.5
+            ball.v = vec(0, 0, 0)
+            
+    t = t + dt
